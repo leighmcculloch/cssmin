@@ -1,3 +1,8 @@
+/* Changes by Leigh McCulloch
+ *  - Changed from using stdin, stdout to using char allocated memory passed
+ *    into cssmin.
+ * Copyright (c) 2013 Leigh McCulloch. All rights reserved.
+ */
 /* cssmin.c
 
 Copyright (c) 2010  (www.ryanday.org)
@@ -53,6 +58,21 @@ static int tmp_state;
 static int state = 1;
 
 static int in_paren = 0;
+
+static const char * in;
+static char * out;
+
+#define getc getc_from_in
+#define putc putc_to_out
+static int getc_from_in(FILE *f) {
+	if (!*in) {
+		return EOF;
+	}
+	return *(in++);
+}
+static int putc_to_out(int c, FILE *f) {
+	return *(out++) = c;
+}
 
 /* get -- return the next character from stdin. Watch out for lookahead. If
 the character is a control character, translate it to a space or
@@ -200,13 +220,13 @@ machine(int c)
 */
 
 static void
-cssmin()
+_cssmin()
 {
 	for (;;) {
 		int c = get();
 		
 		if (c == EOF) {
-			exit(0);
+			return;
 		}
 		
 		c = machine(c);
@@ -217,14 +237,14 @@ cssmin()
 	}
 }
 
-/* main -- Output any command line arguments as comments
-        and then minify the input.
-*/
-extern int
-main(int argc, char* argv[])
-{
-    cssmin();
-    return 0;
+/* Minifies the CSS in 'in', and writes it to 'out' null terminated.
+ * Out must be at least the same length allocated as 'in'.
+ */
+extern void
+cssmin(const char * const _in, char * const _out) {
+	in = _in;
+	out = _out;
+	_cssmin();
 }
 
 
