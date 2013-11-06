@@ -1,3 +1,9 @@
+
++ This is a fork of Ryan Day’s cssmin. It wraps his cssmin for use with character strings
++ rather than file pointers. The wrapping has been done in such a way to minimise the disruption 
++ to his original code.
++ Changes Copyright 2013 Leigh McCulloch and released under same license.
+
 the goal of this project is to make it easy to call this script and get reasonably
 good comment and whitespace stripping from css without other dependancies.
 
