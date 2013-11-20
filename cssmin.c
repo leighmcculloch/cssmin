@@ -245,6 +245,7 @@ cssmin(const char * const _in, char * const _out) {
 	in = _in;
 	out = _out;
 	_cssmin();
+	*out = '\0'; // NULL terminate the string
 }
 
 
